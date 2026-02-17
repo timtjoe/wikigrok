@@ -1,27 +1,31 @@
-// api/index.ts
-export default async function handler(req: Request) {
-  const url = new URL(req.url);
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import searchRoutes from "./routes/search.ts";
 
-  // Health check route
-  if (url.pathname === "/api/status") {
-    return Response.json({ status: "alive", runtime: "bun" });
-  }
+const app = new Hono().basePath("/api");
 
-  // Wikipedia Proxy route
-  if (url.pathname === "/api/wiki") {
-    const wikiParams = url.search;
-    const wikiRes = await fetch(
-      `https://en.wikipedia.org/w/api.php${wikiParams}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.WIKI_ACCESS_TOKEN}`,
-          "User-Agent": "WikiGrok/1.0",
-        },
-      },
-    );
-    const data = await wikiRes.json();
-    return Response.json(data);
-  }
+// Professional CORS - No abstraction, just the config
+app.use(
+  "*",
+  cors({
+    origin: ["https://timtjoe.github.io", "http://localhost:3000"],
+    allowMethods: ["GET", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+  }),
+);
 
-  return new Response("Not Found", { status: 404 });
-}
+// Health Check
+app.get("/status", (c) => {
+  return c.json({
+    status: "WikiGrok API is Live",
+    runtime: "Bun " + Bun.version,
+  });
+});
+
+// Routes
+app.route("/search", searchRoutes);
+
+// Export for BOTH Bun and Vercel
+export default app;
