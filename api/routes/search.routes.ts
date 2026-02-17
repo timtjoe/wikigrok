@@ -1,5 +1,5 @@
-import { Hono } from 'hono';
-import type { ContentfulStatusCode } from 'hono/utils/http-status';
+import { Hono } from "hono";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 
 const search = new Hono();
 
@@ -10,16 +10,16 @@ interface SearchError {
   status?: number;
 }
 
-search.get('/', async (c) => {
-  const q = c.req.query('q') || 'jupiter';
-  const limit = c.req.query('limit') || '20';
+search.get("/", async (c) => {
+  const q = c.req.query("q") || "jupiter";
+  const limit = c.req.query("limit") || "20";
 
   const params = new URLSearchParams({ q, limit });
   const url = `https://en.wikipedia.org/w/rest.php/v1/search/page?${params}`;
 
   const headers = {
-    'Api-User-Agent': 'WikiGrok/1.0 (timtjoe@gmail.com)',
-    'Authorization': `Bearer ${process.env.WIKI_ACCESS_TOKEN}`
+    "Api-User-Agent": "WikiGrok/1.0 (timtjoe@gmail.com)",
+    Authorization: `Bearer ${process.env.WIKI_ACCESS_TOKEN}`,
   };
 
   try {
@@ -27,12 +27,12 @@ search.get('/', async (c) => {
 
     // Handle Wikipedia API errors
     if (!rsp.ok) {
-      // FIX: Cast the number to ContentfulStatusCode to satisfy the overload
+      // FIX: Cast the number to Co'ntentfulStatusCode to satisfy the overload
       const status = rsp.status as ContentfulStatusCode;
-      
-      const errorData: SearchError = { 
-        error: 'Wikipedia API Error', 
-        status: rsp.status 
+
+      const errorData: SearchError = {
+        error: "Wikipedia API Error",
+        status: rsp.status,
       };
 
       return c.json(errorData, status);
@@ -40,11 +40,10 @@ search.get('/', async (c) => {
 
     const data = await rsp.json();
     return c.json(data);
-
   } catch (err) {
-    const errorData: SearchError = { 
-      error: 'Proxy Connection Failed', 
-      details: err instanceof Error ? err.message : 'Unknown' 
+    const errorData: SearchError = {
+      error: "Proxy Connection Failed",
+      details: err instanceof Error ? err.message : "Unknown",
     };
 
     // Use a hardcoded valid status for local errors
