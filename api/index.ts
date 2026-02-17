@@ -17,6 +17,12 @@ app.use(
 );
 
 // Health Check
+app.get("/", (c) => {
+  return c.json({
+    status: "WikiGrok API is Live",
+    runtime: "Bun " + Bun.version,
+  });
+});
 app.get("/status", (c) => {
   return c.json({
     status: "WikiGrok API is Live",
