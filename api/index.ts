@@ -4,14 +4,13 @@ import homeRoutes from "./routes/home.routes.ts";
 import statusRoutes from "./routes/status.routes.ts";
 import { corsMiddleware } from "./config/cors.ts";
 
-// 1. Remove .basePath("/api")
-const app = new Hono();
+// This tells Hono to expect the URL to start with /api
+const app = new Hono().basePath("/api");
 
-// Middlewares
 app.use("*", corsMiddleware);
 
-app.route("/api", homeRoutes);        
-app.route("/api/status", statusRoutes); 
-app.route("/api/search", searchRoutes);
+app.route("/", homeRoutes);       
+app.route("/status", statusRoutes); 
+app.route("/search", searchRoutes);
 
 export default app;
