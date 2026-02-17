@@ -3,7 +3,7 @@
   "bunVersion": "1.x",
   "functions": {
     "index.ts": {
-      "runtime": "vercel-bun@1.2.1"
+      "runtime": "bun"
     }
   },
   "rewrites": [
