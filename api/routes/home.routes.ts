@@ -4,7 +4,10 @@ const home = new Hono();
 
 // 1. READ (Home) - Return basic text
 home.get("/", (c) => {
-  return c.text("Welcome to the WikiGrok API");
+  return c.json({
+    status: "WikiGrok API is Live",
+    endpoints: ["/search", "/status", "/home"],
+  });
 });
 
 // 2. CREATE - Return the data sent to it
