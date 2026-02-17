@@ -18,7 +18,7 @@ search.get('/', async (c) => {
   const url = `https://en.wikipedia.org/w/rest.php/v1/search/page?${params}`;
 
   const headers = {
-    'Api-User-Agent': 'WikiGrok/1.0 (https://github.com/timtjoe/wikigrok)',
+    'Api-User-Agent': 'WikiGrok/1.0 (timtjoe@gmail.com)',
     'Authorization': `Bearer ${process.env.WIKI_ACCESS_TOKEN}`
   };
 
