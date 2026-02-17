@@ -2,9 +2,9 @@ name: Deploy and Release
 
 on:
   push:
-    branches: [master] # Only trigger on actual merges/pushes to master
+    branches: [master] 
   pull_request:
-    branches: [master] # Trigger validation during the PR process
+    branches: [master] 
 
 concurrency:
   group: "master-deploy"
@@ -12,7 +12,6 @@ concurrency:
 
 jobs:
   # JOB 1: Web Deployment
-  # Runs only if files in the root or public folders change (ignoring the api folder)
   deploy-web:
     if: github.event_name == 'push' # Only deploy on merge, not on PR opening
     runs-on: ubuntu-latest
@@ -47,33 +46,3 @@ jobs:
       - name: Deploy
         if: steps.filter.outputs.web == 'true'
         uses: actions/deploy-pages@v4
-
-  # JOB 2: API Deployment
-  # Runs only if files inside the /api folder change
-  deploy-api:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-
-      - name: Check for API changes
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            api:
-              - 'api/**'
-
-      - name: Validate and Deploy API
-        if: steps.filter.outputs.api == 'true'
-        run: |
-          cd api
-          bun install
-          bun x tsc --noEmit
-          
-      - name: Deploy to Vercel
-        if: steps.filter.outputs.api == 'true' && github.event_name == 'push'
-        run: npx vercel --token=${{ secrets.VERCEL_TOKEN }} --prod --yes
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
