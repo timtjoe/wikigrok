@@ -6,8 +6,10 @@ StatusRoutes.get("/", (c) => {
   return c.json({
     status: "WikiGrok API is Live",
     runtime: "Bun " + Bun.version,
-    api_version: process.env.API_VERSION,
     timestamp: new Date().toISOString(),
+    version: process.env.API_VERSION,
+    developer: "Tim T. Joe/timtjoe@gmail.com",
+    name: process.env.APP_NAME,
   });
 });
 
