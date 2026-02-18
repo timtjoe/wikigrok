@@ -1,0 +1,25 @@
+info:
+  name: GET-Search
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: https://en.wikipedia.org/w/rest.php/v1/search/page?q=jupiter&limit=5
+  headers:
+    - name: ""
+      value: ""
+  params:
+    - name: q
+      value: jupiter
+      type: query
+    - name: limit
+      value: "5"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

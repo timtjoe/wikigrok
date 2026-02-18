@@ -1,0 +1,12 @@
+opencollection: 1.0.0
+info:
+  name: "wikigrok_ws"
+  type: workspace
+
+collections:
+  - name: "endpoint"
+    path: "collections\\endpoint"
+
+specs:
+
+docs: ''

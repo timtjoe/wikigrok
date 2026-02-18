@@ -1,0 +1,8 @@
+name: .local
+variables:
+  - secret: true
+    name: APP_NAME
+  - secret: true
+    name: CONTACT_EMAIL
+  - secret: true
+    name: WIKI_ACCESS_TOKEN
