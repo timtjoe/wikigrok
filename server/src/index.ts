@@ -1,17 +1,14 @@
-import { Hono } from "hono";
-import searchRoutes from "./routes/search.routes";
-import homeRoutes from "./routes/home.routes";
-import statusRoutes from "./routes/status.routes";
-import { corsMiddleware } from "./config/cors";
+import { Hono } from 'hono'
 
-// This tells Hono to expect the URL to start with /api
-// const app = new Hono();
-const app = new Hono().basePath("/api");
+const app = new Hono()
 
-app.use("*", corsMiddleware);
+const welcomeStrings = [
+  'Hello Hono!',
+  'To learn more about Hono on Vercel, visit https://vercel.com/docs/frameworks/backend/hono'
+]
 
-app.route("/", homeRoutes);       
-app.route("/status", statusRoutes); 
-app.route("/search", searchRoutes);
+app.get('/', (c) => {
+  return c.text(welcomeStrings.join('\n\n'))
+})
 
-export default app;
+export default app
