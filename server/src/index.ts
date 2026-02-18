@@ -12,7 +12,7 @@ app.use("*", corsMiddleware);
 
 // ROUTES
 app.route("/", HomeRoutes);
-app.route("/status", StatusRoutes);
+app.route(`/api/${process.env.API_VERSION}/status`, StatusRoutes);
 app.route(`/api/${process.env.API_VERSION}/search`, SearchRoutes);
 
 export default app;
