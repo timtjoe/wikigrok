@@ -1,14 +1,18 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
+import { corsMiddleware } from "./config/cors";
+import StatusRoutes from "./routes/status.routes";
+import HomeRoutes from "./routes/home.routes";
+import SearchRoutes from "./routes/search.routes";
 
-const app = new Hono()
+// INSTANCES
+const app = new Hono();
 
-const welcomeStrings = [
-  'Hello Hono!',
-  'To learn more about Hono on Vercel, visit https://vercel.com/docs/frameworks/backend/hono'
-]
+// MIDDLEWARE
+app.use("*", corsMiddleware);
 
-app.get('/', (c) => {
-  return c.text(welcomeStrings.join('\n\n'))
-})
+// ROUTES
+app.route("/", HomeRoutes);
+app.route("/status", StatusRoutes);
+app.route(`/api/${process.env.API_VERSION}/search`, SearchRoutes);
 
-export default app
+export default app;
