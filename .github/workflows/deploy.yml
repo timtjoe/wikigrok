@@ -40,7 +40,10 @@ jobs:
         if: steps.filter.outputs.web == 'true'
         run: |
           bun install
-          bun run build
+          # We pass the public-path so the index.html looks for assets in /wikigrok/
+          bun build ./src/main.tsx --outdir ./dist --public-path /wikigrok/
+          # Copy index.html to 404.html so refreshing /wikigrok/article/1 doesn't break
+          cp dist/index.html dist/404.html
       
       - name: Upload to GH Pages
         if: steps.filter.outputs.web == 'true'
