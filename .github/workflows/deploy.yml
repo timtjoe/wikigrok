@@ -2,10 +2,10 @@ name: Deploy and Release
 
 on:
   push:
-    branches: [master] 
+    branches: [master]
   pull_request:
-    branches: [master] 
-    
+    branches: [master]
+
 permissions:
   contents: read
   pages: write
@@ -16,15 +16,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # JOB 1: Web Deployment
   deploy-web:
-    if: github.event_name == 'push' # Only deploy on merge, not on PR opening
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      
-      # Use path filtering to see if we should skip this build
+
       - name: Check for Web changes
         id: filter
         uses: dorny/paths-filter@v3
@@ -40,17 +38,27 @@ jobs:
         if: steps.filter.outputs.web == 'true'
         run: |
           bun install
-          # We pass the public-path so the index.html looks for assets in /wikigrok/
-          bun build ./src/frontend.tsx --outdir ./dist --public-path /wikigrok/
-          # Copy index.html to 404.html so refreshing /wikigrok/article/1 doesn't break
+          
+          # 1. Build the JS bundle
+          # This creates dist/frontend.js (and css)
+          bun build ./src/frontend.tsx --outdir ./dist --minify --public-path /wikigrok/
+          
+          # 2. Copy the HTML file to dist
+          cp src/index.html dist/index.html
+          
+          # 3. FIX: Update the script tag in the HTML
+          # Change src="./frontend.tsx" to src="/wikigrok/frontend.js"
+          sed -i 's|src="./frontend.tsx"|src="/wikigrok/frontend.js"|g' dist/index.html
+          
+          # 4. Create 404.html for React Router deep-linking support
           cp dist/index.html dist/404.html
-      
+
       - name: Upload to GH Pages
         if: steps.filter.outputs.web == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
-      
+          path: "./dist"
+
       - name: Deploy
         if: steps.filter.outputs.web == 'true'
         uses: actions/deploy-pages@v4
