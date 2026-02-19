@@ -13,6 +13,8 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
 
     // Best practices
     "strict": true,
@@ -31,6 +33,6 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-
+  "include": ["src", "bun-env.d.ts"],
   "exclude": ["dist", "node_modules"]
 }

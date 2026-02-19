@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "portless": "portless wikigrok bun run --watch src/index.ts"
   },
   "dependencies": {
     "hono": "^4.11.9"
