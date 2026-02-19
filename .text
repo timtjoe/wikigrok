@@ -1,0 +1,5 @@
+const response = await fetch('/api/v1/aggregate/Jupiter');
+const { article, recent_activity } = await response.json();
+
+// You can now render a full "Article Preview Card"
+// with a text summary and a list of recent edits.

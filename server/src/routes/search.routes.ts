@@ -59,7 +59,6 @@ SearchRoutes.get("/query", async (c) => {
   if (!q) return c.json({ success: false, error: "Query parameter 'q' is required" }, 400);
 
   try {
-    // Reference: PDF Page 12 - /search/page
     const data = await c.var.wiki(`/search/page?q=${encodeURIComponent(q)}&limit=${limit}`);
     
     const results = (data.pages as WikiPageResult[]).map(transformWikiResult);

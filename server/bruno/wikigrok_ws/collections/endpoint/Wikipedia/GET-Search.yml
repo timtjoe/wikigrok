@@ -5,17 +5,10 @@ info:
 
 http:
   method: GET
-  url: https://en.wikipedia.org/w/rest.php/v1/search/page?q=jupiter&limit=5
+  url: http://localhost:3000/api/v1/search
   headers:
     - name: ""
       value: ""
-  params:
-    - name: q
-      value: jupiter
-      type: query
-    - name: limit
-      value: "5"
-      type: query
   auth: inherit
 
 settings:

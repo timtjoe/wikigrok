@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: https://en.wikipedia.org/w/rest.php/v1/page/Agapanthus/history
+  url: https://en.wikipedia.org/w/rest.php/v1/article/Agapanthus
   headers:
     - name: ""
       value: ""
