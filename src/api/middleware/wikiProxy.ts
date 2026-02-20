@@ -1,4 +1,4 @@
-import { Context, Next } from "hono";
+import type { Context, Next } from "hono";
 
 export const wikiMiddleware = async (c: Context, next: Next) => {
   // We define a helper on the context "set" to make it reusable
