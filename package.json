@@ -1,6 +1,6 @@
 {
   "name": "wikigrok",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Explore the world's knowledge with WikiGrok",
   "repository": {
     "type": "git",
@@ -47,8 +47,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/styled-components": "^5.1.34",
-    "typescript": "^5.0.0",
     "eslint": "^9.0.0",
-    "standard-version": "^9.5.0"
+    "standard-version": "^9.5.0",
+    "typescript": "^5.0.0"
   }
 }
