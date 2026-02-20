@@ -1,0 +1,43 @@
+name: Version Check
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Important for comparing against master
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Get Master Version
+        id: master
+        run: |
+          # Extract version from master branch without switching branches
+          VERSION=$(git show origin/master:package.json | bun -e "console.log(JSON.parse(require('fs').readFileSync(0, 'utf-8')).version)")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get Current Version
+        id: current
+        run: |
+          # Extract version from the current PR branch
+          VERSION=$(bun -e "console.log(require('./package.json').version)")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Compare Versions
+        run: |
+          MASTER_VER=${{ steps.master.outputs.version }}
+          CURRENT_VER=${{ steps.current.outputs.version }}
+          
+          echo "Master Version: $MASTER_VER"
+          echo "PR Version: $CURRENT_VER"
+
+          if [ "$MASTER_VER" == "$CURRENT_VER" ]; then
+            echo "❌ ERROR: Version has not been changed. Run 'bun run release' locally before merging."
+            exit 1
+          fi
+          echo "✅ Version bump detected."

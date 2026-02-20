@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "bun" # Use "bun" instead of "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "timtjoe"
+    labels:
+      - "dependencies"

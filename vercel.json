@@ -1,0 +1,11 @@
+{
+  "build": {
+    "env": {
+      "VERCEL_EXPERIMENTAL_BACKENDS": "1"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/src/index.ts" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

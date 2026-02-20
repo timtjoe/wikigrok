@@ -1,16 +1,40 @@
 {
   "name": "wikigrok",
   "version": "0.0.0",
+  "description": "Explore the world's knowledge with WikiGrok",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timtjoe/wikigrok.git"
+  },
+  "keywords": [
+    "wikipedia",
+    "wikigrok",
+    "knowledge",
+    "aggregator",
+    "react",
+    "bun",
+    "hono"
+  ],
+  "author": "Tim T. Joe",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "bun --hot src/index.ts",
-    "build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
-    "start": "NODE_ENV=production bun src/index.ts"
+    "build": "bun run build:frontend",
+    "build:frontend": "bun build ./src/frontend.tsx --outdir=dist --minify --sourcemap",
+    "start": "NODE_ENV=production bun src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "validate": "bun run typecheck && bun run lint",
+    "release": "standard-version",
+    "release:patch": "standard-version --release-as patch",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",
-    "bun-react-template": ".",
+    "hono": "^4.12.0",
     "react": "^19",
     "react-dom": "^19",
     "react-router": "^7.13.0",
@@ -21,6 +45,10 @@
     "@types/bun": "latest",
     "@types/node": "^25.3.0",
     "@types/react": "^19",
-    "@types/react-dom": "^19"
+    "@types/react-dom": "^19",
+    "@types/styled-components": "^5.1.34",
+    "typescript": "^5.0.0",
+    "eslint": "^9.0.0",
+    "standard-version": "^9.5.0"
   }
 }

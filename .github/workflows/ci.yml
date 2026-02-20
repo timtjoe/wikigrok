@@ -1,0 +1,38 @@
+name: CI Quality Check
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck (TypeScript)
+        # This ensures your frontend and backend types are valid
+        run: bun x tsc --noEmit
+
+      - name: Linting
+        # Optional: Run this if you have a linter like ESLint set up
+        run: bun x eslint .
+        continue-on-error: true 
+
+      - name: Build Test
+        # We run a build just to ensure there are no bundling errors.
+        # Vercel will do its own build, but this catches errors early.
+        run: bun build ./src/frontend.tsx --outdir ./dist --minify
