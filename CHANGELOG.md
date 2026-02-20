@@ -1,6 +1,13 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### [0.0.3](https://github.com/timtjoe/wikigrok/compare/v0.0.2...v0.0.3) (2026-02-20)
+
+
+### Bug Fixes
+
+* fix type error in API ([eb13a9f](https://github.com/timtjoe/wikigrok/commit/eb13a9fa02a9f906869a6ff1eb119d157b58f805))
+
 ### [0.0.2](https://github.com/timtjoe/wikigrok/compare/v0.0.1...v0.0.2) (2026-02-20)
 
 
