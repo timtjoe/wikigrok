@@ -1,6 +1,13 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### [0.0.2](https://github.com/timtjoe/wikigrok/compare/v0.0.1...v0.0.2) (2026-02-20)
+
+
+### Bug Fixes
+
+* vercel runtime error ([849d211](https://github.com/timtjoe/wikigrok/commit/849d211f3ff110af3cb16761ca8382680eea2567))
+
 ### 0.0.1 (2026-02-20)
 
 
