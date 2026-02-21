@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { handle } from "hono/vercel"; // Add this import
+import { handle } from "hono/vercel"; 
 import { corsMiddleware } from "./api/config/cors";
 import { wikiMiddleware } from "./api/middleware/wikiProxy";
 
@@ -31,13 +31,30 @@ app.route(`${API_PREFIX}/feed`, FeedRoutes);
 app.route(`${API_PREFIX}/aggregate`, AggregateRoutes);
 app.route(`${API_PREFIX}/revisions`, RevisionRoutes);
 
+// --- NEW: STATIC ASSET HANDLING FOR SRC ---
+// This prevents the "MIME type text/html" error by serving .tsx files correctly
+app.get("/src/*", async (c) => {
+  const filePath = join(process.cwd(), c.req.path);
+  const file = Bun.file(filePath);
+
+  if (await file.exists()) {
+    // Manually set charset for JS/TS files to ensure browser compatibility
+    return c.body(file.stream(), 200, {
+      "Content-Type": c.req.path.endsWith(".tsx") || c.req.path.endsWith(".ts") 
+        ? "application/javascript" 
+        : file.type,
+    });
+  }
+  return c.notFound();
+});
+
+// --- FALLBACK ---
 app.get("*", async (c) => {
   if (c.req.path.startsWith("/api/")) {
     return c.json({ error: "Not Found" }, 404);
   }
 
   try {
-    // Using join ensures the path is correct in the Vercel lambda environment
     const path = join(process.cwd(), "src", "index.html");
     const content = await Bun.file(path).text();
     return c.html(content);
@@ -48,16 +65,12 @@ app.get("*", async (c) => {
 });
 
 // --- VERCEL ADAPTER ---
-// This is the key to preventing "Function Crashed" errors
 export const GET = handle(app);
 export const POST = handle(app);
 export const PUT = handle(app);
 export const DELETE = handle(app);
 export const PATCH = handle(app);
 
-/**
- * For Bun Local Development
- */
 export default {
   port: process.env.PORT || 3000,
   fetch: app.fetch,
