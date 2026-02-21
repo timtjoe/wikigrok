@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import { serve } from "bun"; // Required for local development
+import { handle } from "hono/vercel"; // Add this import
 import { corsMiddleware } from "./api/config/cors";
 import { wikiMiddleware } from "./api/middleware/wikiProxy";
 
-// Route Imports (Pointed to your api/ folder)
+// Route Imports
 import StatusRoutes from "./api/routes/status.routes";
 import HomeRoutes from "./api/routes/home.routes";
 import SearchRoutes from "./api/routes/search.routes";
@@ -20,8 +20,6 @@ app.use("*", corsMiddleware);
 app.use("*", wikiMiddleware);
 
 // --- ROUTES ---
-
-// Public / Landing (Optional, usually handled by React, but kept for your logic)
 app.route("/api", HomeRoutes);
 
 // API Endpoints
@@ -32,16 +30,27 @@ app.route(`${API_PREFIX}/feed`, FeedRoutes);
 app.route(`${API_PREFIX}/aggregate`, AggregateRoutes);
 app.route(`${API_PREFIX}/revisions`, RevisionRoutes);
 
-// 2. Simple Fallback
-// If it's not an API call, just send the index.html file directly
+// --- FALLBACK ---
 app.get("*", async (c) => {
+  // If request is for an API path but didn't match, 404 instead of sending HTML
+  if (c.req.path.startsWith("/api/")) {
+    return c.json({ error: "Not Found" }, 404);
+  }
+  
+  // Send the source index.html
   return c.html(await Bun.file("./src/index.html").text());
 });
 
+// --- VERCEL ADAPTER ---
+// This is the key to preventing "Function Crashed" errors
+export const GET = handle(app);
+export const POST = handle(app);
+export const PUT = handle(app);
+export const DELETE = handle(app);
+export const PATCH = handle(app);
+
 /**
- * For Vercel & Bun Native:
- * Vercel looks for a default export that has a 'fetch' method.
- * Bun's native 'serve' also looks for 'fetch'.
+ * For Bun Local Development
  */
 export default {
   port: process.env.PORT || 3000,
