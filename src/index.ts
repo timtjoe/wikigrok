@@ -21,10 +21,8 @@ const API_PREFIX = `/api/${process.env.API_VERSION || "v1"}`;
 app.use("*", corsMiddleware);
 app.use("*", wikiMiddleware);
 
-// --- 2. STATIC ASSETS (The "No-Build" Magic) ---
-// This tells Hono to serve files from /src directly.
-// Bun will automatically handle the .tsx -> .js conversion on the fly.
-app.use("/src/*", serveStatic({ root: "./" }));
+// --- 2. STATIC FRONTEND (BUILT FILES) ---
+app.use("/*", serveStatic({ root: "./dist" }));
 
 // --- 3. API ROUTES ---
 app.route("/api", HomeRoutes);
@@ -36,19 +34,13 @@ app.route(`${API_PREFIX}/aggregate`, AggregateRoutes);
 app.route(`${API_PREFIX}/revisions`, RevisionRoutes);
 
 // --- 4. SPA FALLBACK ---
-// If the request isn't for an API or a specific file in /src, send index.html
 app.get("*", async (c) => {
   if (c.req.path.startsWith("/api/")) {
     return c.json({ error: "API Route Not Found" }, 404);
   }
 
-  try {
-    const htmlPath = join(process.cwd(), "src", "index.html");
-    const content = await Bun.file(htmlPath).text();
-    return c.html(content);
-  } catch (err) {
-    return c.text("index.html not found in src/ folder", 404);
-  }
+  const htmlPath = join(process.cwd(), "dist", "index.html");
+  return c.html(await Bun.file(htmlPath).text());
 });
 
 // --- 5. VERCEL ADAPTER ---
@@ -58,8 +50,8 @@ export const PUT = handle(app);
 export const DELETE = handle(app);
 export const PATCH = handle(app);
 
-// --- 6. LOCAL DEV (bun run src/index.ts) ---
+// --- 6. LOCAL DEV ---
 export default {
   port: process.env.PORT || 3000,
-  fetch: app.fetch,
+  fetch: app.fetch
 };

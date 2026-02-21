@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "bun --hot src/index.ts",
     "build": "bun run build:frontend",
-    "build:frontend": "bun build ./src/frontend.tsx --outdir=dist --minify --sourcemap",
+    "build:frontend": "bun build ./src/frontend.tsx --outdir=dist --entry-names=frontend --minify --sourcemap",
     "start": "NODE_ENV=production bun src/index.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/**/*.{ts,tsx}",

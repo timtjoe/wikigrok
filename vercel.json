@@ -1,19 +1,19 @@
 {
   "version": 2,
   "bunVersion": "1.x",
-  "build": {
-    "env": {
-      "VERCEL_EXPERIMENTAL_BACKENDS": "1"
-    }
-  },
+
+  "buildCommand": "bun run build",
+
   "builds": [
     {
       "src": "src/index.ts",
       "use": "@vercel/node"
     }
   ],
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "src/index.ts" },
-    { "source": "/(.*)", "destination": "src/index.ts" }
+
+  "routes": [
+    { "src": "^/api/.*", "dest": "src/index.ts" },
+    { "handle": "filesystem" },
+    { "src": ".*", "dest": "src/index.ts" }
   ]
 }
