@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { Bindings } from "../types";
+import { type Bindings } from "../types";
 
 // --- TYPES (Mapped from PDF Pages 49-52) ---
 
