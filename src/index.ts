@@ -11,6 +11,7 @@ import ArticleRoutes from "./api/routes/article.routes";
 import AggregateRoutes from "./api/routes/aggregate.routes";
 import FeedRoutes from "./api/routes/feed.routes";
 import RevisionRoutes from "./api/routes/revision.routes";
+import { join } from "path";
 
 const app = new Hono();
 const API_PREFIX = `/api/${process.env.API_VERSION || "v1"}`;
@@ -30,15 +31,20 @@ app.route(`${API_PREFIX}/feed`, FeedRoutes);
 app.route(`${API_PREFIX}/aggregate`, AggregateRoutes);
 app.route(`${API_PREFIX}/revisions`, RevisionRoutes);
 
-// --- FALLBACK ---
 app.get("*", async (c) => {
-  // If request is for an API path but didn't match, 404 instead of sending HTML
   if (c.req.path.startsWith("/api/")) {
     return c.json({ error: "Not Found" }, 404);
   }
-  
-  // Send the source index.html
-  return c.html(await Bun.file("./src/index.html").text());
+
+  try {
+    // Using join ensures the path is correct in the Vercel lambda environment
+    const path = join(process.cwd(), "src", "index.html");
+    const content = await Bun.file(path).text();
+    return c.html(content);
+  } catch (err) {
+    console.error("File Read Error:", err);
+    return c.text("Front-end index.html not found", 404);
+  }
 });
 
 // --- VERCEL ADAPTER ---
